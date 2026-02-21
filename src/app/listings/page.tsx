@@ -11,47 +11,26 @@ import {
   IconFilter,
   IconGridDots,
   IconList,
-  IconX,
   IconSparkles,
-  IconHome
+  IconHome,
+  IconPlayerPlayFilled
 } from "@tabler/icons-react";
 
-// Floating particles
-function FloatingParticles() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(15)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-champagne/40 rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -40, 0],
-            opacity: [0.2, 0.8, 0.2],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 3,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+import { FloatingParticles } from "@/components/FloatingParticles";
+import { PrivateCollectionSection } from "@/components/PrivateCollectionSection";
+import { CinematicTourModal } from "@/components/CinematicTourModal";
 
 // Property Card Component
 function PropertyCard({ 
   listing, 
   index, 
-  viewMode 
+  viewMode,
+  onPlayTour
 }: { 
   listing: typeof listings[0]; 
   index: number;
   viewMode: "grid" | "list";
+  onPlayTour: (url: string, title: string) => void;
 }) {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -83,8 +62,24 @@ function PropertyCard({
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         />
         
+        {/* Play Tour Button */}
+        <motion.button 
+          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"
+          initial={false}
+          whileHover={{ scale: 1.1 }}
+          onClick={(e) => {
+            e.preventDefault();
+            // Pass a placeholder high-end luxury cinematic video
+            onPlayTour("https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&loop=1", listing.address);
+          }}
+        >
+          <div className="w-16 h-16 bg-white/20 backdrop-blur-md flex items-center justify-center rounded-full border border-white/50 text-white hover:bg-champagne hover:border-champagne hover:text-neutral-900 transition-all duration-300 shadow-xl">
+             <IconPlayerPlayFilled size={24} className="ml-1" />
+          </div>
+        </motion.button>
+        
         {/* Overlay gradient on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
         
         {/* Status badge */}
         <motion.div 
@@ -286,6 +281,16 @@ export default function ListingsPage() {
 
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [tourModalOpen, setTourModalOpen] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState("");
+  const [currentProperty, setCurrentProperty] = useState("");
+
+  const handlePlayTour = (url: string, title: string) => {
+    setCurrentVideoUrl(url);
+    setCurrentProperty(title);
+    setTourModalOpen(true);
+  };
+
   const [filters, setFilters] = useState({
     priceMin: "",
     priceMax: "",
@@ -512,6 +517,7 @@ export default function ListingsPage() {
                   listing={listing} 
                   index={index}
                   viewMode={viewMode}
+                  onPlayTour={handlePlayTour}
                 />
               ))}
             </AnimatePresence>
@@ -568,6 +574,17 @@ export default function ListingsPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* VIP Private Collection Section */}
+      <PrivateCollectionSection />
+
+      {/* Cinematic Tour Modal */}
+      <CinematicTourModal
+        isOpen={tourModalOpen}
+        onClose={() => setTourModalOpen(false)}
+        videoUrl={currentVideoUrl}
+        propertyName={currentProperty}
+      />
     </main>
   );
 }

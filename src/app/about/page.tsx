@@ -5,10 +5,6 @@ import Link from "next/link";
 import { useRef } from "react";
 import { 
   IconPhone, 
-  IconMail,
-  IconBrandInstagram,
-  IconBrandFacebook,
-  IconBrandLinkedin,
   IconArrowRight,
   IconSparkles,
   IconCertificate,
@@ -101,7 +97,7 @@ export default function AboutPage() {
           style={{ y: heroY }}
         >
           <img 
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80" 
+            src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80" 
             alt="" 
             className="w-full h-full object-cover scale-110"
           />
@@ -508,41 +504,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <section className="py-16 bg-neutral-900">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-            <div>
-              <motion.img 
-                src="/LogoNav.png" 
-                alt="Sam Campolo" 
-                className="h-10 brightness-0 invert mb-4" 
-                whileHover={{ scale: 1.02 }}
-              />
-              <p className="text-neutral-400">Licensed Real Estate Agent | Compass</p>
-            </div>
-            <div className="flex gap-4">
-              {[
-                { icon: IconBrandInstagram, href: "https://www.instagram.com/sam_campolo/" },
-                { icon: IconBrandFacebook, href: "https://www.facebook.com/SamCampoloRealEstate" },
-                { icon: IconBrandLinkedin, href: "https://www.linkedin.com/in/sam-c-1008b5160/" },
-              ].map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 border border-neutral-700 flex items-center justify-center text-neutral-400 hover:border-champagne hover:text-champagne transition-all duration-300"
-                  whileHover={{ scale: 1.05, y: -3 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <social.icon size={20} />
-                </motion.a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import Link from "next/link";
 import { 
   IconPhone, 
   IconMail,
@@ -16,33 +15,7 @@ import {
   IconSend
 } from "@tabler/icons-react";
 
-// Floating particles background
-function FloatingParticles() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-champagne/30 rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -50, 0],
-            opacity: [0.2, 0.6, 0.2],
-            scale: [1, 1.5, 1],
-          }}
-          transition={{
-            duration: 4 + Math.random() * 4,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+import { FloatingParticles } from "@/components/FloatingParticles";
 
 export default function ContactPage() {
   const heroRef = useRef(null);
@@ -110,11 +83,13 @@ export default function ContactPage() {
       <section ref={heroRef} className="relative py-32 lg:py-40 bg-neutral-950 overflow-hidden">
         <FloatingParticles />
         
-        <motion.div style={{ y: heroY }} className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(201, 169, 98, 0.3) 1px, transparent 0)`,
-            backgroundSize: '50px 50px'
-          }} />
+        <motion.div style={{ y: heroY }} className="absolute inset-0 opacity-20">
+          <img 
+            src="https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=1920&q=80" 
+            alt="" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-neutral-950/60" />
         </motion.div>
         
         <div className="relative max-w-7xl mx-auto px-6">
@@ -486,20 +461,6 @@ export default function ContactPage() {
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-white via-transparent to-transparent opacity-30" />
       </section>
 
-      {/* Footer */}
-      <section className="py-14 bg-neutral-900">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <motion.img 
-              src="/LogoNav.png" 
-              alt="Sam Campolo" 
-              className="h-8 brightness-0 invert" 
-              whileHover={{ scale: 1.02 }}
-            />
-            <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} Sam Campolo. All rights reserved.</p>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }

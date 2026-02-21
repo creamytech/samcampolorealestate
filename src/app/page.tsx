@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
-import Link from "next/link";
+import HeroV2 from "@/components/HeroV2";
+import StatsLamp from "@/components/StatsLamp";
+import FeaturedPropertiesV2 from "@/components/FeaturedPropertiesV2";
+import EditorialAbout from "@/components/EditorialAbout";
 import { 
   NeighborhoodsSection, 
   ProcessSection, 
@@ -12,6 +15,8 @@ import {
 } from "@/components/sections";
 import { GoogleRatingBadge } from "@/components/GoogleRatingBadge";
 import { ServiceAreasMap } from "@/components/ServiceAreasMap";
+import { PressMarquee } from "@/components/PressMarquee";
+import { HomeValuation } from "@/components/HomeValuation";
 import { 
   IconPhone,
   IconMail,
@@ -20,13 +25,10 @@ import {
   IconBrandFacebook,
   IconMapPin,
   IconAward,
-  IconChevronDown,
   IconArrowRight,
   IconBed,
   IconBath,
   IconRuler,
-  IconMenu,
-  IconX,
   IconStar,
   IconDiamond
 } from "@tabler/icons-react";
@@ -34,7 +36,7 @@ import {
 // ============================================
 // ANIMATED TEXT REVEAL
 // ============================================
-function TextReveal({ children, className = "", delay = 0 }: { children: string; className?: string; delay?: number }) {
+export function TextReveal({ children, className = "", delay = 0 }: { children: string; className?: string; delay?: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   
@@ -67,309 +69,31 @@ function GoldenShimmer({ className = "" }: { className?: string }) {
   );
 }
 
-// ============================================
-// SPLASH INTRO - CINEMATIC
-// ============================================
-function SplashIntro({ onComplete }: { onComplete: () => void }) {
-  useEffect(() => {
-    const timer = setTimeout(onComplete, 4000);
-    return () => clearTimeout(timer);
-  }, [onComplete]);
-
-  return (
-    <motion.div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-neutral-950"
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1.2, ease: "easeInOut" }}
-    >
-      {/* Animated background lines */}
-      <div className="absolute inset-0 overflow-hidden opacity-20">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute h-px bg-gradient-to-r from-transparent via-champagne to-transparent"
-            style={{ top: `${5 + i * 5}%`, left: 0, right: 0 }}
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 0.5 }}
-            transition={{ duration: 1.5, delay: i * 0.05 }}
-          />
-        ))}
-      </div>
-
-      <div className="text-center relative z-10">
-        {/* Logo Animation */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8, filter: "blur(20px)" }}
-          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center"
-        >
-          {/* Decorative diamond */}
-          <motion.div
-            initial={{ opacity: 0, rotate: 45, scale: 0 }}
-            animate={{ opacity: 1, rotate: 45, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="w-3 h-3 border border-champagne mb-8"
-          />
-          
-          <motion.img
-            src="/Sam Campolo_rgb_SignCenter_Sq_White.png"
-            alt="Sam Campolo"
-            className="w-72 md:w-96 h-auto"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 1 }}
-          />
-          
-          <motion.div
-            className="flex items-center justify-center gap-6 mt-10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4, duration: 0.8 }}
-          >
-            <div className="h-px w-20 bg-gradient-to-r from-transparent to-champagne" />
-            <p className="text-champagne/80 text-xs uppercase tracking-[0.4em] font-light">
-              Luxury Real Estate
-            </p>
-            <div className="h-px w-20 bg-gradient-to-l from-transparent to-champagne" />
-          </motion.div>
-        </motion.div>
-
-        {/* Loading bar */}
-        <motion.div
-          className="mt-16 relative"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8 }}
-        >
-          <div className="w-64 h-px bg-neutral-800 mx-auto overflow-hidden">
-            <motion.div
-              className="h-full bg-gradient-to-r from-champagne/50 via-champagne to-champagne/50"
-              initial={{ x: "-100%" }}
-              animate={{ x: "100%" }}
-              transition={{ duration: 2, delay: 1.8, ease: "easeInOut" }}
-            />
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-}
-
-// ============================================
-// LUXURY NAVIGATION
-// ============================================
-function LuxuryNav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const navLinks = [
-    { name: "Properties", href: "/listings" },
-    { name: "About", href: "/about" },
-    { name: "Neighborhoods", href: "#neighborhoods" },
-    { name: "Contact", href: "/contact" },
-  ];
-
-  return (
-    <>
-      <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? "py-3" : "py-6"
-        }`}
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-      >
-        {/* Background */}
-        <motion.div
-          className={`absolute inset-0 transition-all duration-500 ${
-            scrolled 
-              ? "bg-white/90 backdrop-blur-xl shadow-lg shadow-black/5" 
-              : "bg-transparent"
-          }`}
-        />
-        
-        {/* Golden shimmer border when scrolled */}
-        {scrolled && (
-          <motion.div
-            className="absolute bottom-0 left-0 right-0 h-px"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="h-full bg-gradient-to-r from-transparent via-champagne/50 to-transparent" />
-          </motion.div>
-        )}
-
-        <div className="relative max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
-          <motion.a 
-            href="#" 
-            className="flex items-center group"
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            <img 
-              src="/LogoNav.png" 
-              alt="Sam Campolo" 
-              className={`h-10 md:h-12 transition-all duration-300 ${
-                scrolled ? "brightness-0" : "brightness-0 invert"
-              }`}
-            />
-          </motion.a>
-
-          {/* Desktop Nav - Center */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link, index) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                className={`relative px-5 py-2 text-sm font-medium uppercase tracking-wider transition-colors group ${
-                  scrolled ? "text-neutral-600 hover:text-neutral-900" : "text-white/80 hover:text-white"
-                }`}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 + index * 0.1 }}
-              >
-                {link.name}
-                {/* Animated underline */}
-                <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-px w-0 group-hover:w-3/4 transition-all duration-300 ${
-                  scrolled ? "bg-champagne" : "bg-champagne"
-                }`} />
-              </motion.a>
-            ))}
-          </div>
-
-          {/* CTA Button */}
-          <motion.a
-            href="tel:+19145849799"
-            className={`hidden lg:flex items-center gap-2 px-6 py-3 text-sm font-medium uppercase tracking-wider transition-all duration-300 group relative overflow-hidden ${
-              scrolled 
-                ? "bg-neutral-900 text-white hover:bg-neutral-800" 
-                : "bg-champagne text-neutral-900 hover:bg-champagne-light"
-            }`}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.8 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <GoldenShimmer />
-            <IconPhone size={16} />
-            <span className="relative z-10">Call Now</span>
-          </motion.a>
-
-          {/* Mobile Menu Button */}
-          <motion.button
-            className={`lg:hidden relative z-10 p-2 ${scrolled ? "text-neutral-900" : "text-white"}`}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            whileTap={{ scale: 0.95 }}
-          >
-            <AnimatePresence mode="wait">
-              {mobileMenuOpen ? (
-                <motion.div
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                >
-                  <IconX size={24} />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="menu"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                >
-                  <IconMenu size={24} />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.button>
-        </div>
-      </motion.nav>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            className="fixed inset-0 z-40 lg:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {/* Backdrop */}
-            <motion.div 
-              className="absolute inset-0 bg-neutral-950/95 backdrop-blur-xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            
-            {/* Menu Content */}
-            <motion.div
-              className="absolute inset-x-0 top-20 bottom-0 flex flex-col items-center justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ delay: 0.1 }}
-            >
-              {navLinks.map((link, index) => (
-                <motion.a
-                  key={link.name}
-                  href={link.href}
-                  className="text-3xl font-serif text-white py-4 hover:text-champagne transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + index * 0.1 }}
-                >
-                  {link.name}
-                </motion.a>
-              ))}
-              <motion.a
-                href="tel:+19145849799"
-                className="mt-8 px-8 py-4 bg-champagne text-neutral-900 font-medium uppercase tracking-wider"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                (914) 584-9799
-              </motion.a>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-}
+// (Dead code removed - SplashIntro handled by IntroProvider, Nav handled by LuxuryNav component)
 
 // ============================================
 // HERO WITH VIDEO - ULTRA LUXURY CINEMATIC
 // ============================================
-function HeroVideo() {
+export function HeroVideo() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
   const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1]);
 
   // Generate floating particles
-  const particles = [...Array(40)].map((_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    duration: Math.random() * 10 + 15,
-    delay: Math.random() * 5,
-  }));
+  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; size: number; duration: number; delay: number }>>([]);
+  
+  useEffect(() => {
+    // eslint-disable-next-line
+    setParticles([...Array(40)].map((_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 3 + 1,
+      duration: Math.random() * 10 + 15,
+      delay: Math.random() * 5,
+    })));
+  }, []);
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -382,7 +106,7 @@ function HeroVideo() {
           playsInline
           className="w-full h-[120%] object-cover"
         >
-          <source src="/HeroVideo.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/dzmc26src/video/upload/v1770440999/0206_1_1_1_zll0x7.mp4" type="video/mp4" />
         </video>
         
         {/* Multi-layer luxury gradient overlays */}
@@ -524,11 +248,6 @@ function HeroVideo() {
           <p className="text-champagne text-xs md:text-sm uppercase tracking-[0.5em] font-light">
             Westchester & Fairfield County
           </p>
-          <motion.div 
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-champagne/30 to-transparent -skew-x-12"
-            animate={{ x: ['-200%', '200%'] }}
-            transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-          />
         </motion.div>
         
         {/* Main headline with staggered reveal */}
@@ -666,9 +385,144 @@ function HeroVideo() {
 }
 
 // ============================================
+// MARQUEE BAR - LUXURY PRESENCE STYLE
+// ============================================
+function MarqueeBar() {
+  const topItems = [
+    "Top 1.5% Nationwide",
+    "Westchester County",
+    "Fairfield County",
+    "$12M+ Annual Volume",
+    "Compass Real Estate",
+    "Award-Winning Agent",
+    "Luxury Specialist",
+    "Personalized Service",
+  ];
+
+  const bottomItems = [
+    "Scarsdale",
+    "Bronxville",
+    "Rye",
+    "Larchmont",
+    "Chappaqua",
+    "Bedford",
+    "Greenwich",
+    "Darien",
+    "New Canaan",
+    "Armonk",
+    "Irvington",
+    "Pelham",
+  ];
+
+  return (
+    <div
+      style={{
+        backgroundColor: '#0a0a0a',
+        overflow: 'hidden',
+        position: 'relative',
+        borderTop: '1px solid rgba(201, 169, 98, 0.15)',
+        borderBottom: '1px solid rgba(201, 169, 98, 0.15)',
+      }}
+    >
+      {/* Top row - credentials & taglines, scrolling left */}
+      <div
+        style={{
+          padding: '18px 0',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          overflow: 'hidden',
+          maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            whiteSpace: 'nowrap',
+            animation: 'marquee-scroll 35s linear infinite',
+            width: 'max-content',
+          }}
+        >
+          {/* Duplicate items for seamless loop */}
+          {[...topItems, ...topItems, ...topItems].map((item, i) => (
+            <span key={i} style={{ display: 'flex', alignItems: 'center' }}>
+              <span
+                style={{
+                  color: '#c9a962',
+                  fontSize: 12,
+                  fontWeight: 400,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.35em',
+                  fontFamily: 'Inter, sans-serif',
+                }}
+              >
+                {item}
+              </span>
+              <span
+                style={{
+                  margin: '0 28px',
+                  color: 'rgba(201, 169, 98, 0.4)',
+                  fontSize: 8,
+                }}
+              >
+                ◆
+              </span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom row - neighborhoods, scrolling right */}
+      <div
+        style={{
+          padding: '18px 0',
+          overflow: 'hidden',
+          maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            whiteSpace: 'nowrap',
+            animation: 'marquee-scroll-reverse 40s linear infinite',
+            width: 'max-content',
+          }}
+        >
+          {[...bottomItems, ...bottomItems, ...bottomItems].map((item, i) => (
+            <span key={i} style={{ display: 'flex', alignItems: 'center' }}>
+              <span
+                style={{
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  fontSize: 11,
+                  fontWeight: 300,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.4em',
+                  fontFamily: 'Inter, sans-serif',
+                }}
+              >
+                {item}
+              </span>
+              <span
+                style={{
+                  margin: '0 24px',
+                  color: 'rgba(201, 169, 98, 0.3)',
+                  fontSize: 6,
+                }}
+              >
+                ◆
+              </span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
 // STATS BAR - ELEGANT
 // ============================================
-function StatsBar() {
+export function StatsBar() {
   const stats = [
     { value: "$12.38M", label: "Closed Volume", icon: IconDiamond },
     { value: "18", label: "Transactions", icon: IconStar },
@@ -722,7 +576,7 @@ function StatsBar() {
 // ============================================
 // FEATURED PROPERTIES - LUXURY GRID
 // ============================================
-function FeaturedProperties() {
+export function FeaturedProperties() {
   const properties = [
     {
       image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80",
@@ -910,7 +764,7 @@ function FeaturedProperties() {
 // ============================================
 // ABOUT SECTION - EDITORIAL STYLE
 // ============================================
-function AboutSection() {
+export function AboutSection() {
   return (
     <section id="about" className="py-28 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
@@ -1279,106 +1133,7 @@ function ContactSection() {
   );
 }
 
-// ============================================
-// LUXURY FOOTER - MARBLE INSPIRED
-// ============================================
-function LuxuryFooter() {
-  return (
-    <footer className="relative bg-neutral-900 text-white overflow-hidden">
-      {/* Top border accent */}
-      <div className="h-1 bg-gradient-to-r from-transparent via-champagne to-transparent" />
-      
-      {/* Background texture */}
-      <div className="absolute inset-0 opacity-5" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-      }} />
-      
-      <div className="relative max-w-7xl mx-auto px-6 py-20">
-        {/* Main Footer Content */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Brand Column */}
-          <div className="lg:col-span-2">
-            <motion.img 
-              src="/LogoNav.png" 
-              alt="Sam Campolo" 
-              className="h-14 brightness-0 invert mb-6"
-              whileHover={{ scale: 1.02 }}
-            />
-            <p className="text-neutral-400 text-lg font-light leading-relaxed mb-6 max-w-md">
-              Delivering exceptional real estate experiences in Westchester and Fairfield County&apos;s most prestigious communities.
-            </p>
-            <div className="flex items-center gap-4">
-              <img
-                src="/CompassWhiteLogo.png"
-                alt="Compass"
-                className="h-6 opacity-60"
-              />
-              <span className="text-neutral-600">|</span>
-              <span className="text-neutral-500 text-sm">Licensed Real Estate Agent</span>
-            </div>
-          </div>
-          
-          {/* Contact Column */}
-          <div>
-            <h4 className="text-champagne text-xs uppercase tracking-[0.2em] mb-6">Contact</h4>
-            <div className="space-y-4">
-              <a href="tel:+19145849799" className="block text-white hover:text-champagne transition-colors">
-                (914) 584-9799
-              </a>
-              <a href="mailto:sam.campolo@compass.com" className="block text-neutral-400 hover:text-champagne transition-colors text-sm">
-                sam.campolo@compass.com
-              </a>
-              <p className="text-neutral-500 text-sm">
-                Compass<br />
-                Chappaqua, NY
-              </p>
-            </div>
-          </div>
-          
-          {/* Social Column */}
-          <div>
-            <h4 className="text-champagne text-xs uppercase tracking-[0.2em] mb-6">Connect</h4>
-            <div className="flex flex-col gap-3">
-              {[
-                { icon: IconBrandInstagram, label: "Instagram", href: "https://www.instagram.com/sam_campolo/" },
-                { icon: IconBrandFacebook, label: "Facebook", href: "https://www.facebook.com/SamCampoloRealEstate" },
-                { icon: IconBrandLinkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/sam-c-1008b5160/" },
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-neutral-400 hover:text-white transition-colors group"
-                >
-                  <social.icon size={18} className="text-neutral-600 group-hover:text-champagne transition-colors" />
-                  <span className="text-sm">{social.label}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-neutral-700 to-transparent mb-8" />
-        
-        {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-neutral-500">
-          <p>© {new Date().getFullYear()} Sam Campolo. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <span className="text-neutral-700">|</span>
-            <span className="flex items-center gap-2">
-              <IconDiamond size={12} className="text-champagne" />
-              <span className="text-xs tracking-wider">LUXURY REAL ESTATE</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
 
 // ============================================
 // MAIN PAGE
@@ -1386,19 +1141,21 @@ function LuxuryFooter() {
 export default function Home() {
   return (
     <main className="bg-white">
-      <HeroVideo />
-      <StatsBar />
-      <FeaturedProperties />
+      <HeroV2 />
+      <PressMarquee />
+      <MarqueeBar />
+      <StatsLamp />
+      <FeaturedPropertiesV2 />
       <NeighborhoodsSection />
       <ProcessSection />
       <ServiceAreasMap />
-      <AboutSection />
+      <EditorialAbout />
       <RecentlySoldSection />
       <AwardsSection />
       <Testimonials />
+      <HomeValuation />
       <NewsletterSection />
       <ContactSection />
-      <LuxuryFooter />
     </main>
   );
 }

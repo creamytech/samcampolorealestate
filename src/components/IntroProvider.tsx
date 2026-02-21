@@ -19,24 +19,16 @@ export function useIntro() {
 }
 
 // ============================================
-// LUXURY SPLASH INTRO
+// LUXURY SPLASH INTRO (CINEMATIC REDESIGN)
 // ============================================
 function SplashIntro({ onComplete }: { onComplete: () => void }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     // Complete after animation finishes
-    const timer = setTimeout(onComplete, 4500);
+    const timer = setTimeout(onComplete, 4000);
     return () => clearTimeout(timer);
   }, [onComplete]);
-
-  // Floating particles
-  const particles = [...Array(25)].map((_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    delay: Math.random() * 2,
-    duration: 3 + Math.random() * 2,
-  }));
 
   return (
     <motion.div
@@ -47,93 +39,46 @@ function SplashIntro({ onComplete }: { onComplete: () => void }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#0a0a0a',
+        backgroundColor: '#030303', // Extremely deep charcoal black
       }}
-      exit={{ opacity: 0, scale: 1.05 }}
-      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, filter: 'blur(20px)', scale: 1.05 }}
+      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Animated background rays */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: `linear-gradient(${i * 45}deg, transparent 0%, transparent 45%, rgba(201, 169, 98, 0.03) 50%, transparent 55%, transparent 100%)`,
-            }}
-            initial={{ opacity: 0, rotate: -20 }}
-            animate={{ opacity: 1, rotate: 0 }}
-            transition={{ duration: 2, delay: 0.3 + i * 0.1 }}
-          />
-        ))}
-      </div>
+      {/* Background radial gradient for focus */}
+      <motion.div 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at center, rgba(201,169,98,0.06) 0%, transparent 60%)',
+        }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 3, ease: 'easeOut' }}
+      />
 
-      {/* Floating particles */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-        {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            style={{
-              position: 'absolute',
-              left: `${p.x}%`,
-              bottom: '10%',
-              width: 4,
-              height: 4,
-              borderRadius: '50%',
-              backgroundColor: 'rgba(201, 169, 98, 0.6)',
-            }}
-            animate={{
-              y: [0, -500],
-              opacity: [0, 1, 0],
-              scale: [0.5, 1, 0.5],
-            }}
-            transition={{
-              duration: p.duration,
-              delay: p.delay,
-              repeat: Infinity,
-              ease: "easeOut",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Horizontal decorative lines */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', opacity: 0.15 }}>
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            style={{
-              position: 'absolute',
-              top: `${10 + i * 6}%`,
-              left: 0,
-              right: 0,
-              height: 1,
-              background: 'linear-gradient(to right, transparent, #c9a962, transparent)',
-            }}
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 0.6 }}
-            transition={{ duration: 1.2, delay: i * 0.05 }}
-          />
-        ))}
-      </div>
-
-      {/* Main content - properly centered */}
-      <div style={{ 
-        textAlign: 'center', 
-        position: 'relative', 
-        zIndex: 10,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-        {/* Logo Image */}
+      {/* Main content */}
+      <div style={{ textAlign: 'center', position: 'relative', zIndex: 10 }}>
+        
+        {/* Top dropping line */}
         <motion.div
-          initial={{ opacity: 0, y: 40, filter: 'blur(20px)' }}
+          style={{
+            width: 1,
+            height: 120,
+            background: 'linear-gradient(to bottom, transparent, rgba(201,169,98,0.8))',
+            margin: '0 auto 40px auto',
+          }}
+          initial={{ scaleY: 0, originY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        />
+
+        {/* Logo Reveal */}
+        <motion.div
+          initial={{ opacity: 0, y: 20, filter: 'blur(15px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ delay: 0.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          style={{ display: 'flex', justifyContent: 'center' }}
+          transition={{ delay: 0.6, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}
         >
           <img
             src="/SamCampoloLogo_White.png"
@@ -146,108 +91,116 @@ function SplashIntro({ onComplete }: { onComplete: () => void }) {
               }
             }}
             style={{
-              width: 320,
-              maxWidth: '80vw',
+              width: 340,
+              maxWidth: '85vw',
               height: 'auto',
-              filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
+              filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.8))',
             }}
           />
         </motion.div>
 
-        {/* Fallback text if image doesn't load */}
+        {/* Fallback Text */}
         {!imageLoaded && (
           <motion.h1
             style={{
-              fontSize: 48,
+              fontSize: 32,
               fontFamily: 'Playfair Display, serif',
               color: '#ffffff',
               fontWeight: 400,
-              letterSpacing: '0.05em',
+              letterSpacing: '0.1em',
+              marginBottom: 32,
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
+            transition={{ delay: 0.8 }}
           >
-            Sam Campolo
+            SAM CAMPOLO
           </motion.h1>
         )}
 
-        {/* Tagline */}
+        {/* Loading Progress Line */}
         <motion.div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 24,
-            marginTop: 48,
-          }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.3, duration: 0.8 }}
-        >
-          <motion.div
-            style={{
-              height: 1,
-              width: 80,
-              background: 'linear-gradient(to right, transparent, #c9a962)',
-            }}
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-          />
-          <p
-            style={{
-              color: 'rgba(201, 169, 98, 0.9)',
-              fontSize: 11,
-              textTransform: 'uppercase',
-              letterSpacing: '0.5em',
-              fontWeight: 300,
-            }}
-          >
-            Luxury Real Estate
-          </p>
-          <motion.div
-            style={{
-              height: 1,
-              width: 80,
-              background: 'linear-gradient(to left, transparent, #c9a962)',
-            }}
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-          />
-        </motion.div>
-
-        {/* Loading bar */}
-        <motion.div
-          style={{ marginTop: 64 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
+          transition={{ delay: 1.2 }}
         >
-          <div
-            style={{
-              width: 200,
-              height: 1,
-              backgroundColor: 'rgba(255,255,255,0.1)',
-              margin: '0 auto',
-              overflow: 'hidden',
-              borderRadius: 2,
-            }}
-          >
+          <div style={{ width: 180, height: 1, backgroundColor: 'rgba(255,255,255,0.05)', margin: '0 auto', overflow: 'hidden' }}>
             <motion.div
-              style={{
-                height: '100%',
-                background: 'linear-gradient(to right, rgba(201,169,98,0.3), #c9a962, rgba(201,169,98,0.3))',
-              }}
+              style={{ height: '100%', backgroundColor: '#c9a962' }}
               initial={{ x: '-100%' }}
               animate={{ x: '100%' }}
-              transition={{ duration: 2, delay: 2.2, ease: 'easeInOut' }}
+              transition={{ delay: 1.4, duration: 2, ease: 'easeInOut' }}
             />
           </div>
         </motion.div>
+
+        {/* Tagline */}
+        <motion.p
+          style={{
+            color: 'rgba(255, 255, 255, 0.3)',
+            fontSize: 10,
+            textTransform: 'uppercase',
+            letterSpacing: '0.4em',
+            marginTop: 24,
+          }}
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.8, duration: 1.2 }}
+        >
+          Luxury Real Estate
+        </motion.p>
       </div>
     </motion.div>
+  );
+}
+
+// ============================================
+// SSR LOADING SCREEN
+// ============================================
+function LoadingScreen() {
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 99999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#0a0a0a',
+      }}
+    >
+      {/* Subtle pulsing logo placeholder */}
+      <div
+        style={{
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 24,
+        }}
+      >
+        {/* Shimmer diamond */}
+        <div
+          style={{
+            width: 12,
+            height: 12,
+            border: '1px solid rgba(201, 169, 98, 0.5)',
+            transform: 'rotate(45deg)',
+            animation: 'pulse-subtle 2s ease-in-out infinite',
+          }}
+        />
+        {/* Loading line */}
+        <div
+          style={{
+            width: 120,
+            height: 1,
+            background: 'linear-gradient(to right, transparent, rgba(201, 169, 98, 0.3), transparent)',
+            animation: 'shimmer 2s ease-in-out infinite',
+          }}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -260,6 +213,7 @@ export function IntroProvider({ children }: { children: ReactNode }) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line
     setIsClient(true);
     const seen = sessionStorage.getItem("hasSeenIntro");
     if (!seen) {
@@ -274,10 +228,9 @@ export function IntroProvider({ children }: { children: ReactNode }) {
     sessionStorage.setItem("hasSeenIntro", "true");
   };
 
+  // SSR / initial hydration - show branded loading screen
   if (!isClient) {
-    return (
-      <div style={{ position: 'fixed', inset: 0, backgroundColor: '#0a0a0a', zIndex: 99999 }} />
-    );
+    return <LoadingScreen />;
   }
 
   return (
@@ -288,7 +241,7 @@ export function IntroProvider({ children }: { children: ReactNode }) {
       <motion.div
         initial={!hasSeenIntro ? { opacity: 0 } : false}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.8, delay: showIntro ? 0.3 : 0 }}
       >
         {children}
       </motion.div>

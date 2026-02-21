@@ -10,7 +10,6 @@ export default function LuxuryNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isHomePage = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80);
@@ -21,6 +20,7 @@ export default function LuxuryNav() {
 
   // Close mobile menu on route change
   useEffect(() => {
+    // eslint-disable-next-line
     setMobileMenuOpen(false);
   }, [pathname]);
 
@@ -31,9 +31,7 @@ export default function LuxuryNav() {
     } else {
       document.body.style.overflow = '';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
 
   const navLinks = [
@@ -41,20 +39,22 @@ export default function LuxuryNav() {
     { name: "About", href: "/about" },
     { name: "Neighborhoods", href: "/#neighborhoods" },
     { name: "Contact", href: "/contact" },
+    { name: "Home Valuation", href: "/#valuation" },
+    { name: "Private Collection", href: "/listings#private" },
   ];
 
-  const shouldBeTransparent = isHomePage && !scrolled && !mobileMenuOpen;
+  const shouldBeTransparent = !scrolled && !mobileMenuOpen;
 
   return (
     <>
-      {/* Main Navigation - FIXED positioning */}
+      {/* ===== MAIN NAV BAR ===== */}
       <motion.nav
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 1000,
+          zIndex: 9999,
           padding: scrolled ? '12px 0' : '20px 0',
           transition: 'padding 0.5s ease',
         }}
@@ -62,26 +62,28 @@ export default function LuxuryNav() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Background */}
+        {/* Nav Background */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundColor: shouldBeTransparent ? 'transparent' : 'rgba(255, 255, 255, 0.97)',
-            backdropFilter: shouldBeTransparent ? 'none' : 'blur(20px)',
-            boxShadow: shouldBeTransparent ? 'none' : '0 4px 30px rgba(0, 0, 0, 0.05)',
-            transition: 'all 0.5s ease',
+            backgroundColor: mobileMenuOpen
+              ? '#0a0a0a'
+              : shouldBeTransparent
+                ? 'transparent'
+                : 'rgba(255, 255, 255, 0.97)',
+            backdropFilter: shouldBeTransparent && !mobileMenuOpen ? 'none' : 'blur(20px)',
+            boxShadow: shouldBeTransparent && !mobileMenuOpen ? 'none' : '0 4px 30px rgba(0, 0, 0, 0.05)',
+            transition: 'all 0.4s ease',
           }}
         />
 
         {/* Golden shimmer border when scrolled */}
-        {scrolled && (
+        {scrolled && !mobileMenuOpen && (
           <motion.div
             style={{
               position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
+              bottom: 0, left: 0, right: 0,
               height: 1,
               background: 'linear-gradient(to right, transparent, rgba(201,169,98,0.5), transparent)',
             }}
@@ -101,25 +103,26 @@ export default function LuxuryNav() {
           justifyContent: 'space-between',
         }}>
           {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 10 }}>
             <motion.img
               src="/LogoNav.png"
               alt="Sam Campolo"
               style={{
                 height: 40,
-                filter: shouldBeTransparent ? 'brightness(0) invert(1)' : 'brightness(0)',
-                transition: 'filter 0.5s ease',
+                filter: (mobileMenuOpen || shouldBeTransparent)
+                  ? 'brightness(0) invert(1)'
+                  : 'brightness(0)',
+                transition: 'filter 0.4s ease',
               }}
               whileHover={{ scale: 1.02 }}
             />
           </Link>
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav - Center */}
           <div style={{ display: 'none' }} className="lg:!flex lg:items-center lg:gap-1">
-            {navLinks.map((link, index) => {
-              const isActive = pathname === link.href || 
+            {navLinks.filter(l => l.name !== "Home Valuation" && l.name !== "Private Collection").map((link, index) => {
+              const isActive = pathname === link.href ||
                 (link.href !== "/" && pathname.startsWith(link.href.split("#")[0]));
-              
               return (
                 <motion.div
                   key={link.name}
@@ -153,10 +156,7 @@ export default function LuxuryNav() {
                         layoutId="nav-underline"
                         style={{
                           position: 'absolute',
-                          bottom: 0,
-                          left: '20%',
-                          width: '60%',
-                          height: 2,
+                          bottom: 0, left: '20%', width: '60%', height: 2,
                           backgroundColor: '#c9a962',
                         }}
                       />
@@ -168,203 +168,231 @@ export default function LuxuryNav() {
           </div>
 
           {/* Desktop CTA */}
-          <motion.a
-            href="tel:+19145849799"
-            style={{
-              display: 'none',
-              alignItems: 'center',
-              gap: 8,
-              padding: '12px 24px',
-              fontSize: 13,
-              fontWeight: 500,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              backgroundColor: shouldBeTransparent ? '#c9a962' : '#171717',
-              color: shouldBeTransparent ? '#171717' : '#ffffff',
-              transition: 'all 0.5s ease',
-            }}
-            className="lg:!flex"
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <IconPhone size={16} />
-            <span>Call Now</span>
-          </motion.a>
+          <div className="hidden lg:flex items-center gap-6">
+            <Link
+              href="/listings#private"
+              className="text-white hover:text-champagne transition-colors text-[13px] font-medium uppercase tracking-widest hidden xl:block"
+              style={{ color: shouldBeTransparent ? 'rgba(255,255,255,0.9)' : '#525252' }}
+            >
+              Private Collection
+            </Link>
+            
+            <motion.a
+              href="/#valuation"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '12px 24px',
+                fontSize: 13,
+                fontWeight: 500,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                backgroundColor: shouldBeTransparent ? '#c9a962' : '#171717',
+                color: shouldBeTransparent ? '#171717' : '#ffffff',
+                transition: 'all 0.5s ease',
+              }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Home Valuation
+            </motion.a>
+          </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Hamburger / Close */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             style={{
               display: 'block',
               padding: 8,
               color: mobileMenuOpen ? '#ffffff' : (shouldBeTransparent ? '#ffffff' : '#171717'),
-              zIndex: 1010,
               position: 'relative',
+              zIndex: 10,
               background: 'none',
               border: 'none',
               cursor: 'pointer',
+              transition: 'color 0.3s ease',
             }}
             className="lg:!hidden"
           >
-            {mobileMenuOpen ? <IconX size={24} /> : <IconMenu2 size={24} />}
+            <AnimatePresence mode="wait" initial={false}>
+              {mobileMenuOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <IconX size={26} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <IconMenu2 size={26} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </button>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* ===== MOBILE FULL-SCREEN MENU ===== */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
+            key="mobile-menu"
             style={{
               position: 'fixed',
-              inset: 0,
-              zIndex: 999,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 9998,
+              backgroundColor: '#0a0a0a',
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Dark background */}
-            <motion.div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundColor: '#0a0a0a',
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-            />
-
-            {/* Decorative particles */}
+            {/* Floating gold particles */}
             <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-              {[...Array(20)].map((_, i) => (
+              {[...Array(12)].map((_, i) => (
                 <motion.div
                   key={i}
                   style={{
                     position: 'absolute',
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    width: 2,
-                    height: 2,
+                    left: `${8 + (i * 7.5) % 84}%`,
+                    top: `${15 + (i * 6.3) % 70}%`,
+                    width: 3,
+                    height: 3,
                     borderRadius: '50%',
-                    backgroundColor: 'rgba(201, 169, 98, 0.4)',
+                    backgroundColor: 'rgba(201, 169, 98, 0.35)',
                   }}
                   animate={{
-                    y: [0, -50],
-                    opacity: [0, 0.8, 0],
+                    y: [0, -40, 0],
+                    opacity: [0.2, 0.7, 0.2],
                   }}
                   transition={{
-                    duration: 3,
-                    delay: Math.random() * 2,
+                    duration: 4,
+                    delay: i * 0.25,
                     repeat: Infinity,
+                    ease: 'easeInOut',
                   }}
                 />
               ))}
             </div>
 
             {/* Menu Content */}
-            <motion.div
+            <div
               style={{
-                position: 'relative',
-                height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '80px 24px',
-                zIndex: 10,
+                minHeight: '100vh',
+                padding: '100px 32px 60px',
+                position: 'relative',
+                zIndex: 2,
               }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 30 }}
-              transition={{ delay: 0.1 }}
             >
-              {/* Decorative top line */}
+              {/* Top decorative line */}
               <motion.div
                 style={{
                   width: 60,
                   height: 1,
                   background: 'linear-gradient(to right, transparent, #c9a962, transparent)',
-                  marginBottom: 48,
+                  marginBottom: 32,
                 }}
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.15, duration: 0.5 }}
               />
 
-              {/* Navigation Links */}
-              {navLinks.map((link, index) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 + index * 0.08 }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{
-                      display: 'block',
-                      padding: '16px 0',
-                      fontSize: 28,
-                      fontFamily: 'Playfair Display, serif',
-                      color: '#ffffff',
-                      textAlign: 'center',
-                      textDecoration: 'none',
-                      transition: 'color 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#c9a962';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#ffffff';
-                    }}
-                  >
-                    {link.name}
-                  </Link>
-                </motion.div>
-              ))}
+              {/* Nav Links */}
+              <nav style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                {navLinks.map((link, index) => {
+                  const isActive = pathname === link.href ||
+                    (link.href !== "/" && pathname.startsWith(link.href.split("#")[0]));
+                  return (
+                    <motion.div
+                      key={link.name}
+                      initial={{ opacity: 0, y: 25 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ delay: 0.1 + index * 0.07, duration: 0.4 }}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        style={{
+                          display: 'block',
+                          padding: '14px 24px',
+                          fontSize: 30,
+                          fontFamily: 'Playfair Display, serif',
+                          fontWeight: 400,
+                          color: isActive ? '#c9a962' : '#ffffff',
+                          textDecoration: 'none',
+                          textAlign: 'center',
+                          letterSpacing: '0.02em',
+                          transition: 'color 0.3s ease',
+                        }}
+                      >
+                        {link.name}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </nav>
 
               {/* Phone CTA */}
               <motion.a
                 href="tel:+19145849799"
                 style={{
-                  marginTop: 48,
+                  marginTop: 36,
                   padding: '16px 40px',
                   backgroundColor: '#c9a962',
                   color: '#0a0a0a',
-                  fontSize: 14,
-                  fontWeight: 500,
+                  fontSize: 15,
+                  fontWeight: 600,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
+                  letterSpacing: '0.12em',
                   textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
                 }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                transition={{ delay: 0.45, duration: 0.4 }}
+                whileTap={{ scale: 0.96 }}
               >
+                <IconPhone size={16} />
                 (914) 584-9799
               </motion.a>
 
-              {/* Decorative bottom line */}
+              {/* Bottom decorative line */}
               <motion.div
                 style={{
                   width: 60,
                   height: 1,
                   background: 'linear-gradient(to right, transparent, #c9a962, transparent)',
-                  marginTop: 48,
+                  marginTop: 36,
                 }}
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
               />
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

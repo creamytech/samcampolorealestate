@@ -1,56 +1,13 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { 
-  IconMapPin, 
-  IconTrendingUp, 
-  IconHome, 
   IconArrowRight,
   IconUsersGroup,
   IconClipboardList,
   IconTarget,
   IconHomePlus,
-  IconTrophy,
-  IconStarFilled,
-  IconChartLine,
-  IconCertificate,
-  type Icon
 } from "@tabler/icons-react";
-
-// ============================================
-// ANIMATED COUNTER
-// ============================================
-function AnimatedCounter({ value, suffix = "", prefix = "" }: { value: number; suffix?: string; prefix?: string }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (isInView) {
-      const duration = 2000;
-      const steps = 60;
-      const increment = value / steps;
-      let current = 0;
-      const timer = setInterval(() => {
-        current += increment;
-        if (current >= value) {
-          setCount(value);
-          clearInterval(timer);
-        } else {
-          setCount(Math.floor(current));
-        }
-      }, duration / steps);
-      return () => clearInterval(timer);
-    }
-  }, [isInView, value]);
-
-  return (
-    <span ref={ref}>
-      {prefix}{count.toLocaleString()}{suffix}
-    </span>
-  );
-}
 
 // ============================================
 // NEIGHBORHOODS SECTION
@@ -88,10 +45,10 @@ export function NeighborhoodsSection() {
       description: "Premier Westchester address"
     },
     {
-      name: "Greenwich, CT",
-      image: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&q=80",
-      stats: { avgPrice: "$3.2M", homes: "25+" },
-      description: "Connecticut's gold coast"
+      name: "North Salem",
+      image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800&q=80",
+      stats: { avgPrice: "$2.8M", homes: "Equestrian" },
+      description: "Recognized North Salem Specialist"
     },
   ];
 
@@ -141,8 +98,8 @@ export function NeighborhoodsSection() {
               <motion.img
                 src={hood.image}
                 alt={hood.name}
-                className="w-full h-full object-cover"
-                whileHover={{ scale: 1.1 }}
+                className="w-full h-full object-cover mix-blend-luminosity hover:mix-blend-normal"
+                whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.6 }}
               />
               
@@ -408,7 +365,7 @@ export function RecentlySoldSection() {
 }
 
 // ============================================
-// AWARDS SECTION
+// AWARDS SECTION - EDITORIAL
 // ============================================
 export function AwardsSection() {
   const awards = [
@@ -416,52 +373,78 @@ export function AwardsSection() {
       year: "2025",
       title: "RealTrends Verified",
       subtitle: "Top 1.5% of Agents Nationwide",
-      Icon: IconTrophy
     },
     {
       year: "2023",
       title: "Rising Star Award",
-      subtitle: "Exceptional Performance",
-      Icon: IconStarFilled
+      subtitle: "Westchester Real Estate",
+    },
+    {
+      year: "2022 & 2023",
+      title: "Fastest Growing Agent",
+      subtitle: "Homesnap Excellence Award",
     },
     {
       year: "2022",
-      title: "Homesnap",
-      subtitle: "Fastest Growing Agent",
-      Icon: IconChartLine
-    },
-    {
-      year: "Certified",
-      title: "Dale Carnegie",
-      subtitle: "Professional Excellence",
-      Icon: IconCertificate
+      title: "Top Producing Agent",
+      subtitle: "Keller Williams White Plains",
     },
   ];
 
   return (
-    <section className="py-20 bg-neutral-900 relative overflow-hidden">
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-champagne/5 via-transparent to-champagne/5" />
-      
+    <section className="py-32 bg-neutral-50 relative overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="flex flex-wrap justify-center gap-8 lg:gap-16">
-          {awards.map((award, index) => (
-            <motion.div
-              key={award.title}
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <div className="w-14 h-14 mx-auto bg-champagne/10 flex items-center justify-center mb-4">
-                <award.Icon size={26} className="text-champagne" />
-              </div>
-              <p className="text-champagne text-xs uppercase tracking-wider mb-1">{award.year}</p>
-              <p className="text-white font-medium">{award.title}</p>
-              <p className="text-neutral-500 text-sm">{award.subtitle}</p>
-            </motion.div>
-          ))}
+        
+        <div className="grid lg:grid-cols-12 gap-16 lg:gap-8 items-start">
+          <motion.div 
+            className="lg:col-span-5 sticky top-32"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="flex items-center gap-4 mb-6">
+               <div className="h-px w-12 bg-champagne" />
+               <span className="text-champagne text-xs uppercase tracking-[0.3em]">Accolades</span>
+            </div>
+            <h2 className="text-5xl md:text-7xl font-serif text-neutral-900 leading-[0.9] mb-8">
+              Industry <br/><span className="italic font-light text-neutral-400">Recognition</span>
+            </h2>
+            <p className="text-neutral-500 font-light leading-relaxed max-w-sm">
+              Consistently recognized for unparalleled service, negotiation expertise, and exceptional sales volume across Westchester.
+            </p>
+          </motion.div>
+
+          <div className="lg:col-span-6 lg:col-start-7 flex flex-col pt-12">
+            {awards.map((award, index) => (
+              <motion.div
+                key={award.title}
+                className="group relative py-10 border-t border-neutral-200"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 relative z-10">
+                  <div className="flex flex-col top-0">
+                    <span className="text-champagne text-sm uppercase tracking-widest font-medium mb-2">{award.year}</span>
+                    <h3 className="text-3xl md:text-4xl font-serif text-neutral-900 group-hover:text-champagne transition-colors duration-500">{award.title}</h3>
+                  </div>
+                  <div className="text-neutral-400 text-sm md:text-base font-light tracking-wide md:text-right">
+                    {award.subtitle}
+                  </div>
+                </div>
+                {/* Background hover reveal line */}
+                <motion.div 
+                  className="absolute bottom-0 left-0 h-0.5 bg-champagne"
+                  initial={{ width: 0 }}
+                  whileHover={{ width: "100%" }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                />
+              </motion.div>
+            ))}
+            <div className="border-t border-neutral-200" />
+          </div>
         </div>
       </div>
     </section>

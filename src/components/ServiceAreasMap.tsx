@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { IconMapPin, IconHome, IconBuildingEstate } from "@tabler/icons-react";
+import { IconMapPin, IconBuildingEstate, IconDownload } from "@tabler/icons-react";
 
 // Westchester County service areas with coordinates for visual positioning
 const serviceAreas = [
@@ -101,21 +101,15 @@ export function ServiceAreasMap() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            {/* Map background styling */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-emerald-50/30" />
-            
-            {/* Decorative map grid */}
-            <svg className="absolute inset-0 w-full h-full opacity-10">
-              <defs>
-                <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-neutral-400" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#mapGrid)" />
-            </svg>
-
-            {/* Water indication - Long Island Sound */}
-            <div className="absolute bottom-0 right-0 w-2/3 h-1/4 bg-gradient-to-tl from-blue-100/60 to-transparent" />
+            {/* Actual Google Map Background */}
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d192237.52550186595!2d-73.914238!3d41.13!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c2b74b68eef9eb%3A0xeebd1217e65ad57c!2sWestchester%20County%2C%20NY!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+              className="absolute inset-0 w-full h-full border-0 grayscale opacity-40 pointer-events-none"
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+            <div className="absolute inset-0 bg-blue-50/10 pointer-events-none mix-blend-overlay" />
             
             {/* County label */}
             <div className="absolute top-6 left-6 text-xs uppercase tracking-widest text-neutral-400 font-medium">
@@ -255,6 +249,32 @@ export function ServiceAreasMap() {
                 ))}
               </div>
             </div>
+
+            {/* Market Report Download */}
+            <motion.div 
+              className="mt-12 bg-neutral-950 p-6 lg:p-8 relative overflow-hidden group border border-neutral-900"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-champagne/5 blur-2xl group-hover:bg-champagne/10 transition-colors duration-500" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                  <h4 className="text-white font-serif text-xl mb-2">2026 Q1 Market Report</h4>
+                  <p className="text-neutral-400 text-sm font-light max-w-sm">
+                    Gain exclusive insights into Westchester&apos;s luxury real estate trends, neighborhood valuations, and forecasts.
+                  </p>
+                </div>
+                <a 
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); alert("Market report will begin downloading shortly."); }}
+                  className="flex-shrink-0 flex items-center gap-3 px-6 py-4 bg-champagne text-neutral-900 uppercase text-xs font-bold tracking-widest hover:bg-white transition-colors self-start md:self-auto"
+                >
+                  Download PDF
+                  <IconDownload size={16} />
+                </a>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
