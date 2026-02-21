@@ -37,7 +37,7 @@ export default function LuxuryNav() {
   const navLinks = [
     { name: "Properties", href: "/listings" },
     { name: "About", href: "/about" },
-    { name: "Neighborhoods", href: "/#neighborhoods" },
+    { name: "Neighborhoods", href: "/neighborhoods" },
     { name: "Contact", href: "/contact" },
     { name: "Home Valuation", href: "/#valuation" },
     { name: "Private Collection", href: "/listings#private" },

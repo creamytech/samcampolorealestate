@@ -14,6 +14,7 @@ import {
   IconTrophy
 } from "@tabler/icons-react";
 import { GoogleRatingBadge } from "@/components/GoogleRatingBadge";
+import { ScrollIndicator, LuxuryStar, CompassRose } from "@/components/AnimatedEmblems";
 
 // Floating Orbs Background
 function FloatingOrbs() {
@@ -131,11 +132,14 @@ export default function AboutPage() {
             </motion.div>
             
             <motion.h1 
-              className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-8 leading-tight"
+              className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-8 leading-tight relative"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
+              <div className="absolute -top-12 -left-8 text-neutral-800 pointer-events-none hidden md:block">
+                <LuxuryStar size={80} />
+              </div>
               Meet <span className="italic font-light">Sam Campolo</span>
             </motion.h1>
             
@@ -151,18 +155,9 @@ export default function AboutPage() {
         </motion.div>
 
         {/* Scroll indicator */}
-        <motion.div 
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          <motion.div
-            className="w-px h-16 bg-gradient-to-b from-champagne to-transparent"
-            animate={{ scaleY: [1, 0.5, 1], opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-        </motion.div>
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 hidden md:block">
+          <ScrollIndicator />
+        </div>
       </section>
 
       {/* Bio Section */}
@@ -177,7 +172,10 @@ export default function AboutPage() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true, margin: "-100px" }}
             >
-              <div className="relative group">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-neutral-100 pointer-events-none z-0">
+                <CompassRose size={800} />
+              </div>
+              <div className="relative group z-10">
                 <div className="aspect-[3/4] overflow-hidden">
                   <motion.img 
                     src="/sampic.jpg" 

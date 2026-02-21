@@ -19,6 +19,7 @@ import {
 import { FloatingParticles } from "@/components/FloatingParticles";
 import { PrivateCollectionSection } from "@/components/PrivateCollectionSection";
 import { CinematicTourModal } from "@/components/CinematicTourModal";
+import { ScrollIndicator, LuxuryStar } from "@/components/AnimatedEmblems";
 
 // Property Card Component
 function PropertyCard({ 
@@ -349,11 +350,14 @@ export default function ListingsPage() {
             </motion.div>
             
             <motion.h1 
-              className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6"
+              className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6 relative"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
+              <div className="absolute -top-10 -left-6 text-neutral-800 pointer-events-none hidden md:block">
+                <LuxuryStar size={70} />
+              </div>
               Available <span className="italic font-light">Listings</span>
             </motion.h1>
             
@@ -368,8 +372,13 @@ export default function ListingsPage() {
           </motion.div>
         </div>
 
+        {/* Scroll indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 hidden md:block">
+          <ScrollIndicator />
+        </div>
+
         {/* Gradient fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-neutral-50 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-neutral-50 to-transparent pointer-events-none" />
       </section>
 
       {/* Content */}
