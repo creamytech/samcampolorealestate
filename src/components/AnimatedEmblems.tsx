@@ -31,11 +31,11 @@ export const LuxuryStar = ({ className = "", size = 40 }: { className?: string, 
       transition={{ duration: 1.5, delay: 0.5 }}
     />
     <motion.circle
-      cx="50"
-      cy="50"
-      r="4"
+      cx={50}
+      cy={50}
+      r={4}
       fill="currentColor"
-      initial={{ scale: 0 }}
+      initial={{ scale: 0, cx: 50, cy: 50 }}
       whileInView={{ scale: [0, 1.5, 1] }}
       viewport={{ once: true }}
       transition={{ duration: 1.5, delay: 1 }}
@@ -54,10 +54,11 @@ export const ScrollIndicator = ({ className = "" }: { className?: string }) => (
     <motion.svg width="14" height="40" viewBox="0 0 14 40" fill="none">
       <rect x="0.5" y="0.5" width="13" height="39" rx="6.5" stroke="currentColor" strokeWidth="1" className="opacity-30" />
       <motion.circle
-        cx="7"
-        cy="7"
-        r="3"
+        cx={7}
+        cy={7}
+        r={3}
         fill="currentColor"
+        initial={{ cy: 7 }}
         animate={{ cy: [7, 33, 7] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -75,14 +76,14 @@ export const CompassRose = ({ className = "", size = 80 }: { className?: string,
     transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
   >
     <motion.circle 
-      cx="50" cy="50" r="48" 
+      cx={50} cy={50} r={48} 
       fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 4"
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.8, cx: 50, cy: 50 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 1.5 }}
     />
-    <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" strokeWidth="1" className="opacity-20" />
+    <circle cx={50} cy={50} r={38} fill="none" stroke="currentColor" strokeWidth="1" className="opacity-20" />
     <motion.path
       d="M50 10 L58 42 L90 50 L58 58 L50 90 L42 58 L10 50 L42 42 Z"
       fill="none"
@@ -104,8 +105,8 @@ export const CompassRose = ({ className = "", size = 80 }: { className?: string,
       transition={{ duration: 1.5, delay: 0.8 }}
     />
     <motion.circle 
-      cx="50" cy="50" r="2" fill="currentColor" 
-      initial={{ scale: 0 }}
+      cx={50} cy={50} r={2} fill="currentColor" 
+      initial={{ scale: 0, cx: 50, cy: 50 }}
       whileInView={{ scale: 1 }}
       viewport={{ once: true }}
       transition={{ delay: 1.5 }}

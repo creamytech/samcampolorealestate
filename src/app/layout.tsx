@@ -3,6 +3,7 @@ import "./globals.css";
 import LuxuryNav from "@/components/LuxuryNav";
 import { IntroProvider } from "@/components/IntroProvider";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://samcampolorealestate.com"),
@@ -50,15 +51,21 @@ export const metadata: Metadata = {
 
 import LuxuryFooter from "@/components/LuxuryFooter";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const hasSeenIntro = cookieStore.has("hasSeenIntro");
+  
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" href="/LogoNav.png" as="image" />
+      </head>
       <body>
-        <IntroProvider>
+        <IntroProvider initialHasSeen={hasSeenIntro}>
           <ScrollToTop />
           <LuxuryNav />
           {children}

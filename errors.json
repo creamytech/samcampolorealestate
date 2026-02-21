@@ -1,9 +1,8 @@
 [
   {
-    "file": "C:\\Users\\benja\\Documents\\samcampolo\\src\\app\\neighborhoods\\page.tsx",
+    "file": "C:\\Users\\benja\\Documents\\samcampolo\\src\\components\\IntroProvider.tsx",
     "errors": [
-      "1: 'IconBuildingEstate' is defined but never used. [@typescript-eslint/no-unused-vars] - line 5",
-      "1: 'IconSchool' is defined but never used. [@typescript-eslint/no-unused-vars] - line 5"
+      "1: Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect'). [null] - line 146"
     ]
   }
 ]
