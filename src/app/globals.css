@@ -68,9 +68,6 @@
     @apply font-sans text-neutral-900 bg-white;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    /* Enable hardware acceleration for all animations */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
   }
 
   h1, h2, h3, h4, h5, h6 {

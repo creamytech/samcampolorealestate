@@ -28,7 +28,8 @@ export default function HeroV2() {
       <motion.div className="absolute inset-0 z-0 origin-center" style={{ y, scale }}>
         <video
           autoPlay muted loop playsInline
-          className="w-full h-full md:h-[120%] object-cover opacity-80"
+          className="w-full h-full md:h-[120%] object-cover"
+          style={{ objectPosition: 'center 40%' }}
         >
           <source src="https://res.cloudinary.com/dzmc26src/video/upload/v1770440999/0206_1_1_1_zll0x7.mp4" type="video/mp4" />
         </video>
