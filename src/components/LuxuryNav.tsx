@@ -8,11 +8,29 @@ import { IconPhone, IconMenu2, IconX } from "@tabler/icons-react";
 
 export default function LuxuryNav() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
+    let lastY = 0;
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        setScrolled(currentY > 80);
+        // Hide nav on scroll down, show on scroll up (only after hero)
+        if (currentY > 400) {
+          setHidden(currentY > lastY && currentY - lastY > 5);
+        } else {
+          setHidden(false);
+        }
+        lastY = currentY;
+        ticking = false;
+      });
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
@@ -55,8 +73,9 @@ export default function LuxuryNav() {
           left: 0,
           right: 0,
           zIndex: 9999,
-          padding: scrolled ? '12px 0' : '20px 0',
-          transition: 'padding 0.5s ease',
+          padding: scrolled ? '10px 0' : '20px 0',
+          transform: (hidden && !mobileMenuOpen) ? 'translateY(-100%)' : 'translateY(0)',
+          transition: 'padding 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
         }}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -71,10 +90,13 @@ export default function LuxuryNav() {
               ? '#0a0a0a'
               : shouldBeTransparent
                 ? 'transparent'
-                : 'rgba(255, 255, 255, 0.97)',
-            backdropFilter: shouldBeTransparent && !mobileMenuOpen ? 'none' : 'blur(20px)',
-            boxShadow: shouldBeTransparent && !mobileMenuOpen ? 'none' : '0 4px 30px rgba(0, 0, 0, 0.05)',
-            transition: 'all 0.4s ease',
+                : 'rgba(255, 255, 255, 0.92)',
+            backdropFilter: shouldBeTransparent && !mobileMenuOpen ? 'none' : 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: shouldBeTransparent && !mobileMenuOpen ? 'none' : 'blur(24px) saturate(180%)',
+            boxShadow: shouldBeTransparent && !mobileMenuOpen
+              ? 'none'
+              : '0 1px 0 rgba(201,169,98,0.15), 0 8px 32px rgba(0, 0, 0, 0.08)',
+            transition: 'all 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         />
 
