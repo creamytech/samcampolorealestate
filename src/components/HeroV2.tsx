@@ -16,7 +16,7 @@ export default function HeroV2() {
   // Wait 7 seconds for the video to play before revealing content
   const [showContent, setShowContent] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => setShowContent(true), 7000);
+    const timer = setTimeout(() => setShowContent(true), 5000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -89,7 +89,7 @@ export default function HeroV2() {
               transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1], delay: BASE + 0.7 }}
             >
               <h1 className="text-6xl md:text-[8rem] lg:text-[10rem] leading-[0.85] font-serif text-white tracking-tight">
-                SAM
+                Sam
               </h1>
             </motion.div>
           </div>
