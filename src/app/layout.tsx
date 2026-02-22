@@ -52,29 +52,86 @@ export const metadata: Metadata = {
 import LuxuryFooter from "@/components/LuxuryFooter";
 
 /**
- * Server-rendered loading screen HTML.
- * This renders BEFORE any JavaScript loads, so the user
- * sees the branded splash instead of a black screen.
- * The IntroProvider client component will hide this via
- * document.getElementById and take over.
+ * Ultra-premium server-rendered loading screen.
+ * Renders BEFORE any JavaScript loads — pure HTML + CSS animations.
+ * IntroProvider hides this via document.getElementById("ssr-splash").
  */
 const SSR_LOADING_HTML = `
-<div id="ssr-splash" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#030303">
-  <div style="text-align:center">
-    <div style="width:1px;height:100px;background:linear-gradient(to bottom,transparent,#c9a962);margin:0 auto 36px auto"></div>
-    <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 24px auto">
-      <rect x="2" y="2" width="96" height="96" rx="4" stroke="#c9a962" stroke-width="1.5" opacity="0.5"/>
-      <text x="50" y="60" text-anchor="middle" font-family="Georgia,Times,serif" font-size="40" font-weight="400" fill="white" letter-spacing="4">SC</text>
-    </svg>
-    <div style="color:white;font-size:42px;font-family:Georgia,Times,serif;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:6px">SAM</div>
-    <div style="color:#c9a962;font-size:48px;font-family:Georgia,Times,serif;font-weight:400;font-style:italic;letter-spacing:0.08em;margin-bottom:32px">Campolo</div>
-    <div style="width:200px;height:2px;background:rgba(255,255,255,0.1);margin:0 auto;overflow:hidden;border-radius:1px">
-      <div style="width:100%;height:100%;background:linear-gradient(90deg,#c9a962,#e8d5a3);animation:ssrSlide 2.5s ease-in-out 0.5s forwards;transform:translateX(-100%)"></div>
+<style>
+  @keyframes splashFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes splashLineGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes splashLineGrowX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes splashRingPulse { 0%,100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } }
+  @keyframes splashRingSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes splashProgress { from { transform: translateX(-100%); } to { transform: translateX(0%); } }
+  @keyframes splashShimmer { from { transform: translateX(-200%); } to { transform: translateX(200%); } }
+  @keyframes splashLetterIn { from { opacity: 0; transform: translateY(30px) rotateX(-40deg); } to { opacity: 1; transform: translateY(0) rotateX(0); } }
+  @keyframes splashTagline { from { opacity: 0; letter-spacing: 1.2em; } to { opacity: 0.5; letter-spacing: 0.5em; } }
+  @keyframes splashCorner { from { opacity: 0; } to { opacity: 0.15; } }
+  @keyframes splashGlow { 0%,100% { box-shadow: 0 0 30px rgba(201,169,98,0.05); } 50% { box-shadow: 0 0 80px rgba(201,169,98,0.15); } }
+  @keyframes splashDot { 0%,80%,100% { opacity: 0; } 40% { opacity: 1; } }
+</style>
+<div id="ssr-splash" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#020202 0%,#0a0a0a 50%,#050505 100%);overflow:hidden">
+  <!-- Corner frames -->
+  <div style="position:absolute;top:24px;left:24px;width:60px;height:60px;border-top:1px solid #c9a962;border-left:1px solid #c9a962;animation:splashCorner 1.5s ease forwards;opacity:0"></div>
+  <div style="position:absolute;top:24px;right:24px;width:60px;height:60px;border-top:1px solid #c9a962;border-right:1px solid #c9a962;animation:splashCorner 1.5s ease 0.1s forwards;opacity:0"></div>
+  <div style="position:absolute;bottom:24px;left:24px;width:60px;height:60px;border-bottom:1px solid #c9a962;border-left:1px solid #c9a962;animation:splashCorner 1.5s ease 0.2s forwards;opacity:0"></div>
+  <div style="position:absolute;bottom:24px;right:24px;width:60px;height:60px;border-bottom:1px solid #c9a962;border-right:1px solid #c9a962;animation:splashCorner 1.5s ease 0.3s forwards;opacity:0"></div>
+
+  <!-- Ambient glow behind content -->
+  <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(201,169,98,0.06) 0%,transparent 70%);animation:splashGlow 3s ease-in-out infinite"></div>
+
+  <!-- Main content -->
+  <div style="text-align:center;position:relative;perspective:800px">
+    <!-- Vertical gold accent line -->
+    <div style="width:1px;height:80px;margin:0 auto 32px auto;transform-origin:top;animation:splashLineGrow 1.2s cubic-bezier(0.22,1,0.36,1) 0.2s both;background:linear-gradient(to bottom,transparent 0%,rgba(201,169,98,0.3) 30%,#c9a962 100%)"></div>
+
+    <!-- Rotating ring emblem -->
+    <div style="position:relative;width:100px;height:100px;margin:0 auto 32px auto">
+      <svg width="100" height="100" viewBox="0 0 100 100" style="position:absolute;inset:0;animation:splashRingSpin 20s linear infinite">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#c9a962" stroke-width="0.5" opacity="0.3" stroke-dasharray="4 6"/>
+      </svg>
+      <svg width="100" height="100" viewBox="0 0 100 100" style="position:absolute;inset:0;animation:splashRingPulse 3s ease-in-out infinite">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#c9a962" stroke-width="0.8" opacity="0.5"/>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;animation:splashFadeIn 1s ease 0.5s both">
+        <span style="font-family:Georgia,Times,serif;font-size:28px;color:white;letter-spacing:3px;font-weight:300">SC</span>
+      </div>
     </div>
-    <div style="color:rgba(255,255,255,0.4);font-size:12px;text-transform:uppercase;letter-spacing:0.5em;margin-top:28px;font-family:system-ui,-apple-system,sans-serif">Luxury Real Estate</div>
+
+    <!-- Name: letter-by-letter reveal -->
+    <div style="margin-bottom:4px;overflow:hidden">
+      <span style="display:inline-block;font-family:Georgia,Times,serif;font-size:48px;color:white;letter-spacing:0.25em;font-weight:300;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.8s both">S</span><span style="display:inline-block;font-family:Georgia,Times,serif;font-size:48px;color:white;letter-spacing:0.25em;font-weight:300;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.9s both">A</span><span style="display:inline-block;font-family:Georgia,Times,serif;font-size:48px;color:white;letter-spacing:0.25em;font-weight:300;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 1.0s both">M</span>
+    </div>
+    <div style="margin-bottom:28px;overflow:hidden">
+      <span style="display:inline-block;font-family:Georgia,Times,serif;font-size:56px;color:#c9a962;font-style:italic;font-weight:300;letter-spacing:0.06em;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 1.1s both">C</span><span style="display:inline-block;font-family:Georgia,Times,serif;font-size:56px;color:#c9a962;font-style:italic;font-weight:300;letter-spacing:0.06em;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 1.17s both">a</span><span style="display:inline-block;font-family:Georgia,Times,serif;font-size:56px;color:#c9a962;font-style:italic;font-weight:300;letter-spacing:0.06em;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 1.24s both">m</span><span style="display:inline-block;font-family:Georgia,Times,serif;font-size:56px;color:#c9a962;font-style:italic;font-weight:300;letter-spacing:0.06em;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 1.31s both">p</span><span style="display:inline-block;font-family:Georgia,Times,serif;font-size:56px;color:#c9a962;font-style:italic;font-weight:300;letter-spacing:0.06em;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 1.38s both">o</span><span style="display:inline-block;font-family:Georgia,Times,serif;font-size:56px;color:#c9a962;font-style:italic;font-weight:300;letter-spacing:0.06em;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 1.45s both">l</span><span style="display:inline-block;font-family:Georgia,Times,serif;font-size:56px;color:#c9a962;font-style:italic;font-weight:300;letter-spacing:0.06em;animation:splashLetterIn 0.8s cubic-bezier(0.22,1,0.36,1) 1.52s both">o</span>
+    </div>
+
+    <!-- Horizontal divider lines -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px">
+      <div style="width:60px;height:1px;background:linear-gradient(to right,transparent,#c9a962);transform-origin:right;animation:splashLineGrowX 1s ease 1.6s both"></div>
+      <div style="width:6px;height:6px;border:1px solid #c9a962;transform:rotate(45deg);animation:splashFadeIn 0.8s ease 1.8s both;opacity:0"></div>
+      <div style="width:60px;height:1px;background:linear-gradient(to left,transparent,#c9a962);transform-origin:left;animation:splashLineGrowX 1s ease 1.6s both"></div>
+    </div>
+
+    <!-- Progress bar with shimmer -->
+    <div style="width:220px;height:1px;background:rgba(255,255,255,0.06);margin:0 auto;overflow:hidden;border-radius:1px;animation:splashFadeIn 0.5s ease 2s both;opacity:0">
+      <div style="width:100%;height:100%;background:linear-gradient(90deg,#c9a962,#e8d5a3,#c9a962);animation:splashProgress 3s cubic-bezier(0.45,0,0.15,1) 2.2s both"></div>
+    </div>
+
+    <!-- Tagline with tracking animation -->
+    <div style="margin-top:24px;font-family:system-ui,-apple-system,sans-serif;font-size:11px;text-transform:uppercase;color:rgba(255,255,255,0.5);animation:splashTagline 2s ease 2s both;opacity:0">
+      Luxury Real Estate
+    </div>
+
+    <!-- Loading dots -->
+    <div style="margin-top:16px;display:flex;justify-content:center;gap:6px;animation:splashFadeIn 0.5s ease 2.5s both;opacity:0">
+      <div style="width:3px;height:3px;border-radius:50%;background:#c9a962;animation:splashDot 1.5s ease-in-out 2.5s infinite"></div>
+      <div style="width:3px;height:3px;border-radius:50%;background:#c9a962;animation:splashDot 1.5s ease-in-out 2.7s infinite"></div>
+      <div style="width:3px;height:3px;border-radius:50%;background:#c9a962;animation:splashDot 1.5s ease-in-out 2.9s infinite"></div>
+    </div>
   </div>
 </div>
-<style>@keyframes ssrSlide{to{transform:translateX(100%)}}</style>
 `;
 
 export default async function RootLayout({
