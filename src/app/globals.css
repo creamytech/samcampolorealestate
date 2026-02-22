@@ -89,6 +89,26 @@
     outline: 2px solid #c9a962;
     outline-offset: 2px;
   }
+
+  /* Luxury custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #c9a962, #a68940);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #d4b872, #c9a962);
+  }
+  /* Firefox */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: #c9a962 #0a0a0a;
+  }
 }
 
 @layer utilities {

@@ -74,12 +74,14 @@ export default function LuxuryNav() {
           right: 0,
           zIndex: 9999,
           padding: scrolled ? '10px 0' : '20px 0',
-          transform: (hidden && !mobileMenuOpen) ? 'translateY(-100%)' : 'translateY(0)',
-          transition: 'padding 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+          transition: 'padding 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
         }}
         initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        animate={{ 
+          y: (hidden && !mobileMenuOpen) ? -100 : 0, 
+          opacity: 1 
+        }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Nav Background */}
         <div
