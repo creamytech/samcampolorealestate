@@ -8,29 +8,11 @@ import { IconPhone, IconMenu2, IconX } from "@tabler/icons-react";
 
 export default function LuxuryNav() {
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    let lastY = 0;
-    let ticking = false;
-    const handleScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const currentY = window.scrollY;
-        setScrolled(currentY > 80);
-        // Hide nav on scroll down, show on scroll up (only after hero)
-        if (currentY > 400) {
-          setHidden(currentY > lastY && currentY - lastY > 5);
-        } else {
-          setHidden(false);
-        }
-        lastY = currentY;
-        ticking = false;
-      });
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
@@ -77,11 +59,8 @@ export default function LuxuryNav() {
           transition: 'padding 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
         }}
         initial={{ y: -100, opacity: 0 }}
-        animate={{ 
-          y: (hidden && !mobileMenuOpen) ? -100 : 0, 
-          opacity: 1 
-        }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Nav Background */}
         <div
